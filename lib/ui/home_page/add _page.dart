@@ -21,49 +21,50 @@ class _AddPageState extends State<AddPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: ListView(
         children: [
           Padding(
-            padding: EdgeInsets.all(15),
+            padding: const EdgeInsets.all(15),
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 MyTextField(
                   controller: titlecont,
                   label: "title kiriting",
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 MyTextField(
                   controller: pricecont,
                   label: "price kiriting",
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 MyTextField(
                   controller: descriptioncont,
                   label: "description kiriting",
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 MyTextField(
                     controller: categorycont, label: "categoriya kiriting"),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 MyTextField(
                   controller: imagecont,
                   label: "imagePath kiriting",
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 ElevatedButton(
@@ -93,7 +94,7 @@ class _AddPageState extends State<AddPage> {
                       ),
                     );
                   },
-                  child: Text(
+                  child: const Text(
                     "Add Product",
                   ),
                 ),

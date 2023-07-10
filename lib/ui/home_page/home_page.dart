@@ -3,8 +3,7 @@ import 'package:e_commerce/ui/details_page/details_page.dart';
 import 'package:e_commerce/ui/home_page/add%20_page.dart';
 import 'package:flutter/material.dart';
 
-import '../../services/models/product_model/products_model.dart';
-import '../../services/repository/all_products_repo.dart';
+import 'package:e_commerce/services/repository/all_products_repo.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

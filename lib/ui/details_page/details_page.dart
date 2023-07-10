@@ -1,9 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/services/repository/all_products_repo.dart';
+import 'package:e_commerce/ui/details_page/widgets/appbarIcons.dart';
+import 'package:e_commerce/ui/details_page/widgets/listview.dart';
+import 'package:e_commerce/ui/home_page/widgets/textfield.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/models/product_model/products_model.dart';
 
+// ignore: must_be_immutable
 class DetailsPage extends StatefulWidget {
   int? id;
   DetailsPage({super.key, required this.id});
@@ -13,47 +17,91 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
+  ProductsModel? data;
+  TextEditingController titlecont = TextEditingController();
+  TextEditingController pricecont = TextEditingController();
+  TextEditingController desccont = TextEditingController();
+  TextEditingController imagecont = TextEditingController();
+  TextEditingController catcont = TextEditingController();
+  d() async {
+    final daa =
+        await AllProductsRepository.fetchProductsByID(widget.id!.toInt());
+    print(daa);
+    setState(() {
+      data = daa[0];
+    });
+    print(data);
+  }
+
+  @override
+  void initState() {
+    d();
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Details"),
         actions: [
-          IconButton(
-            onPressed: () {
-
-
-              
-
-
-
-            },
-            icon: const Icon(
-              Icons.edit,
-            ),
-          ),
+          AppbarIcons(
+              titlecont: titlecont,
+              data: data,
+              pricecont: pricecont,
+              desccont: desccont,
+              imagecont: imagecont,
+              catcont: catcont,
+              widget: widget),
           IconButton(
             onPressed: () async {
-              final deleted = await AllProductsRepository.deleteProductByID(
-                  widget.id!.toInt());
-              final d = deleted[0];
-              setState(() {
-                
-              });
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(backgroundColor: Colors.red,
-                  content: Container(
-                    child: Column(
-                      children: [
-                        Text(
-                            "${d.title} Nomli mahsulot muvaffaqiyatli o'chirildi!"),
-                        
-                      ],
-                    ),
-                  ),
-                ),
+              // ignore: use_build_context_synchronously
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    actions: [
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text(
+                          "NO",
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          
+                          final deleted =
+                              await AllProductsRepository.deleteProductByID(
+                                  widget.id!.toInt());
+                          final d = deleted[0];
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Container(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                        "${d.title} Nomli mahsulot muvaffaqiyatli o'chirildi!"),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                          Navigator.pop(context);
+                          
+                          
+                          
+                          
+                        },
+                        child: Text(
+                          "Yes",
+                        ),
+                      ),
+                    ],
+                  );
+                },
               );
-              
             },
             icon: const Icon(
               Icons.delete,
@@ -65,121 +113,7 @@ class _DetailsPageState extends State<DetailsPage> {
         padding: const EdgeInsets.all(
           12,
         ),
-        child: ListView(
-          children: [
-            FutureBuilder(
-              future:
-                  AllProductsRepository.fetchProductsByID(widget.id!.toInt()),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  );
-                } else if (!snapshot.hasData) {
-                  return const Center(
-                    child: Text('No data available'),
-                  );
-                }
-
-                final List<ProductsModel> dataa = snapshot.data;
-                final data = dataa[0];
-
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  // crossAxisAlignment: CrossAxisAlignment.star?t,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    CachedNetworkImage(height: 360, imageUrl: data.image),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            data.title,
-                            style: const TextStyle(fontSize: 24),
-                          ),
-                        ),
-                        Text(
-                          "${data.price.toString()} \$",
-                          style: const TextStyle(fontSize: 24),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 6,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.star,
-                              color: Colors.amber[600],
-                            ),
-                            const SizedBox(
-                              width: 2,
-                            ),
-                            Text(
-                              data.rating!.rate.toString(),
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.amber[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.download,
-                              color: Colors.green,
-                            ),
-                            Text(
-                              data.rating!.count.toString(),
-                              style: const TextStyle(
-                                fontSize: 18,
-                              ),
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    const Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Description",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Flexible(
-                      child: Text(
-                        data.description,
-                        style: const TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ],
-        ),
+        child: ListviewFuture(widget: widget),
       ),
     );
   }
