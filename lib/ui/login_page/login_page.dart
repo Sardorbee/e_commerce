@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
+// ignore: use_key_in_widget_constructors
 class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Color(0xFF1E1F28), // Background color
+        color: const Color(0xFF1E1F28), // Background color
         child: Stack(
           children: [
-            Align(
+            const Align(
               alignment: Alignment.topRight,
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0),
                 child: Text(
                   'Login',
                   style: TextStyle(
@@ -30,8 +31,8 @@ class LoginPage extends StatelessWidget {
                     size: 120,
                     textColor: Colors.white,
                   ),
-                  SizedBox(height: 30),
-                  Text(
+                  const SizedBox(height: 30),
+                  const Text(
                     'Welcome to MyApp',
                     style: TextStyle(
                       color: Colors.white,
@@ -39,55 +40,55 @@ class LoginPage extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 32),
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
                     child: Column(
                       children: [
                         TextFormField(
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
                             hintText: 'Email',
-                            hintStyle: TextStyle(color: Colors.white70),
+                            hintStyle: const TextStyle(color: Colors.white70),
                             filled: true,
                             fillColor: Colors.white.withOpacity(0.1),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide: BorderSide.none,
                             ),
-                            prefixIcon: Icon(
+                            prefixIcon: const Icon(
                               Icons.email,
                               color: Colors.white,
                             ),
                           ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         TextFormField(
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                           obscureText: true,
                           decoration: InputDecoration(
                             hintText: 'Password',
-                            hintStyle: TextStyle(color: Colors.white70),
+                            hintStyle: const TextStyle(color: Colors.white70),
                             filled: true,
                             fillColor: Colors.white.withOpacity(0.1),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide: BorderSide.none,
                             ),
-                            prefixIcon: Icon(
+                            prefixIcon: const Icon(
                               Icons.lock,
                               color: Colors.white,
                             ),
                           ),
                         ),
-                        SizedBox(height: 20),
-                        Container(
+                        const SizedBox(height: 20),
+                        SizedBox(
                           width: double.infinity, // Take full width
                           child: ElevatedButton(
                             onPressed: () {},
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
-                                  Color(0xFFEF3651)), // Button color
+                                  const Color(0xFFEF3651)), // Button color
                               shape: MaterialStateProperty.all<
                                   RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
@@ -96,7 +97,7 @@ class LoginPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            child: Padding(
+                            child: const Padding(
                               padding: EdgeInsets.symmetric(vertical: 16),
                               child: Text(
                                 'Log In',
@@ -109,10 +110,10 @@ class LoginPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         TextButton(
                           onPressed: () {},
-                          child: Text(
+                          child: const Text(
                             'Forgot Password?',
                             style: TextStyle(
                               color: Colors.white70,
@@ -132,7 +133,7 @@ class LoginPage extends StatelessWidget {
               bottom: 20,
               child: Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 32),
+                padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -145,13 +146,13 @@ class LoginPage extends StatelessWidget {
                       ),
                       child: IconButton(
                         onPressed: () {},
-                        icon: Icon(Icons.facebook),
+                        icon: const Icon(Icons.facebook),
                         color: Colors.black,
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Container(
@@ -163,7 +164,7 @@ class LoginPage extends StatelessWidget {
                       ),
                       child: IconButton(
                         onPressed: () {},
-                        icon: Icon(Icons.g_translate),
+                        icon: const Icon(Icons.g_translate),
                         color: Colors.black,
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,

@@ -1,5 +1,4 @@
 import 'package:e_commerce/ui/cart_page/cart_page.dart';
-import 'package:e_commerce/ui/details_page/details_page.dart';
 import 'package:e_commerce/ui/favorite_page/favourite_page.dart';
 import 'package:e_commerce/ui/home_page/home_page.dart';
 import 'package:e_commerce/ui/login_page/login_page.dart';

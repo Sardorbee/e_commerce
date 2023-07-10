@@ -1,8 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/services/repository/all_products_repo.dart';
-import 'package:e_commerce/ui/details_page/widgets/appbarIcons.dart';
+import 'package:e_commerce/ui/details_page/widgets/appbar_icons.dart';
 import 'package:e_commerce/ui/details_page/widgets/listview.dart';
-import 'package:e_commerce/ui/home_page/widgets/textfield.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/models/product_model/products_model.dart';
@@ -26,11 +24,10 @@ class _DetailsPageState extends State<DetailsPage> {
   d() async {
     final daa =
         await AllProductsRepository.fetchProductsByID(widget.id!.toInt());
-    print(daa);
     setState(() {
       data = daa[0];
     });
-    print(data);
+    (data);
   }
 
   @override
@@ -75,26 +72,26 @@ class _DetailsPageState extends State<DetailsPage> {
                               await AllProductsRepository.deleteProductByID(
                                   widget.id!.toInt());
                           final d = deleted[0];
+                          // ignore: use_build_context_synchronously
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               backgroundColor: Colors.red,
-                              content: Container(
-                                child: Column(
-                                  children: [
-                                    Text(
-                                        "${d.title} Nomli mahsulot muvaffaqiyatli o'chirildi!"),
-                                  ],
-                                ),
+                              content: Column(
+                                children: [
+                                  Text(
+                                      "${d.title} Nomli mahsulot muvaffaqiyatli o'chirildi!"),
+                                ],
                               ),
                             ),
                           );
+                          // ignore: use_build_context_synchronously
                           Navigator.pop(context);
                           
                           
                           
                           
                         },
-                        child: Text(
+                        child: const Text(
                           "Yes",
                         ),
                       ),

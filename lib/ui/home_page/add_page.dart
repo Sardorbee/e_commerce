@@ -1,8 +1,8 @@
-import 'package:e_commerce/services/repository/all_products_repo.dart';
 import 'package:e_commerce/ui/home_page/widgets/textfield.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/models/product_model/products_model.dart';
+import '../../services/repository/all_products_repo.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({super.key});
@@ -79,17 +79,17 @@ class _AddPageState extends State<AddPage> {
                     final dataa =
                         await AllProductsRepository.addProducts(newProduct);
                     final data = dataa[0];
+                    // ignore: use_build_context_synchronously
                     Navigator.pop(context);
+                    // ignore: use_build_context_synchronously
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         backgroundColor: Colors.green,
-                        content: Container(
-                          child: Column(
-                            children: [
-                              Text(
-                                  "Mahsulot :  ${data.title} nomida, ${data.id} id da magazinga qo'shildi!")
-                            ],
-                          ),
+                        content: Column(
+                          children: [
+                            Text(
+                                "Mahsulot :  ${data.title} nomida, ${data.id} id da magazinga qo'shildi!")
+                          ],
                         ),
                       ),
                     );

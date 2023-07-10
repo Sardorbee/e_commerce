@@ -5,7 +5,7 @@ import '../models/user_model/user_model.dart';
 
 class UserProvider {
   Future<List<UserModel>> getUsers() async {
-    final apiUrl = 'https://fakestoreapi.com/users'; // Replace with your API endpoint
+    const apiUrl = 'https://fakestoreapi.com/users'; // Replace with your API endpoint
 
     final response = await http.get(Uri.parse(apiUrl));
 
@@ -20,7 +20,6 @@ class UserProvider {
       }
     } else {
       // Handle the API error
-      print('Error: ${response.statusCode}');
       return [];
     }
   }

@@ -39,36 +39,36 @@ class AppbarIcons extends StatelessWidget {
           builder: (BuildContext context) {
             return Dialog(
               child: Container(
-                padding: EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 height: 500,
                 child: Column(
                   children: [
-                    Text(
+                    const Text(
                       "Update",
                       style:
                           TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     MyTextField(controller: titlecont),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     MyTextField(controller: pricecont),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     MyTextField(controller: desccont),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     MyTextField(controller: imagecont),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     MyTextField(controller: catcont),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     ElevatedButton(
@@ -81,16 +81,15 @@ class AppbarIcons extends StatelessWidget {
                               image: imagecont.text);
                           Navigator.pop(context);
 
+                          // ignore: unused_local_variable
                           final d =
                               await AllProductsRepository.addProductUpdate(
                                   product, widget.id!.toInt());
-                          print(d[0].title);
+                          // ignore: use_build_context_synchronously
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Container(
-                            child: Text("${data!.id}"),
-                          )));
+                              content: Text("${data!.id}")));
                         },
-                        child: Text("Update Product"))
+                        child: const Text("Update Product"))
                   ],
                 ),
               ),

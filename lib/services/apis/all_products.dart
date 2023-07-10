@@ -8,7 +8,7 @@ import '../models/product_model/products_model.dart';
 class APiProvider {
   Future<UniversalResponse> getAllProducts(
       String categoy, String? sort, int limit) async {
-    print(1);
+  
     Uri uri = Uri.parse(
         "https://fakestoreapi.com/products$categoy?sort=$sort&limit=$limit");
     try {
@@ -24,7 +24,7 @@ class APiProvider {
       }
       return UniversalResponse(error: "ERROR");
     } catch (error) {
-      print("ERRROR$error");
+      
       return UniversalResponse(error: error.toString());
     }
   }
@@ -44,7 +44,7 @@ class APiProvider {
 
       return UniversalResponse(error: "ERROR");
     } catch (error) {
-      print("ERROR: $error");
+     
       return UniversalResponse(error: error.toString());
     }
   }

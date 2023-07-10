@@ -14,10 +14,10 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Profile Page"),
+        title: const Text("Profile Page"),
       ),
       body: Padding(
-        padding: EdgeInsets.all(
+        padding: const EdgeInsets.all(
           8,
         ),
         child: FutureBuilder(
@@ -37,7 +37,7 @@ class _ProfilePageState extends State<ProfilePage> {
               );
             }
             final List<UserModel> dataa = snapshot.data;
-            print(dataa);
+           
             final data = dataa[0];
 
             return Column(

@@ -1,7 +1,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/ui/details_page/details_page.dart';
-import 'package:e_commerce/ui/home_page/add%20_page.dart';
+import 'package:e_commerce/ui/home_page/add_page.dart';
 import 'package:flutter/material.dart';
 import 'package:e_commerce/services/repository/all_products_repo.dart';
 
@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AddPage(),
+                  builder: (context) => const AddPage(),
                 ),
               );
             },
@@ -126,7 +126,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: Center(
                     child: PopupMenuButton<int>(
-                      child: Text(limit.toString()),
                       initialValue: limit,
                       onSelected: (int? newValue) {
                         setState(() {
@@ -137,10 +136,12 @@ class _HomePageState extends State<HomePage> {
                         return limitOptions.map((int value) {
                           return PopupMenuItem<int>(
                             value: value,
+                            // ignore: unrelated_type_equality_checks
                             child: Text(value == '' ? "All" : value.toString()),
                           );
                         }).toList();
                       },
+                      child: Text(limit.toString()),
                       // Remove or set the icon property to null to disable the icon
                       // icon: null,
                     ),
@@ -172,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                       }).toList();
                       
                     },
-                    child:  Text("Category"),
+                    child:  const Text("Category"),
                     // Remove or set the icon property to null to disable the icon
                     // icon: null,
                   ),
@@ -210,7 +211,7 @@ class _HomePageState extends State<HomePage> {
                             MaterialPageRoute(
                               builder: (context) => DetailsPage(id: product.id),
                             )),
-                        leading: Container(
+                        leading: SizedBox(
                           width: 40,
                           child: CachedNetworkImage(
                               height: 50, imageUrl: product.image),
