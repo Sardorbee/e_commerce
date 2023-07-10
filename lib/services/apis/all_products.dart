@@ -8,7 +8,6 @@ import '../models/product_model/products_model.dart';
 class APiProvider {
   Future<UniversalResponse> getAllProducts(
       String categoy, String? sort, int limit) async {
-  
     Uri uri = Uri.parse(
         "https://fakestoreapi.com/products$categoy?sort=$sort&limit=$limit");
     try {
@@ -24,12 +23,9 @@ class APiProvider {
       }
       return UniversalResponse(error: "ERROR");
     } catch (error) {
-      
       return UniversalResponse(error: error.toString());
     }
   }
-
-  
 
   Future<UniversalResponse> getProductsByID(int id) async {
     Uri uri = Uri.parse("https://fakestoreapi.com/products/${id.toString()}");
@@ -44,26 +40,21 @@ class APiProvider {
 
       return UniversalResponse(error: "ERROR");
     } catch (error) {
-     
       return UniversalResponse(error: error.toString());
     }
   }
 
   Future<UniversalResponse> deleteProduct(int productId) async {
-    final apiUrl =
-        'https://fakestoreapi.com/products/$productId'; // Replace with your API endpoint
+    final apiUrl = 'https://fakestoreapi.com/products/$productId';
 
     try {
       final response = await http.delete(Uri.parse(apiUrl));
 
       if (response.statusCode == 200) {
-        // Product deleted successfully
-
         return UniversalResponse(
           data: ProductsModel.fromJson(jsonDecode(response.body)),
         );
       } else {
-        // Handle the API error
         return UniversalResponse(
           error: 'Error: ${response.statusCode}',
         );
@@ -76,8 +67,7 @@ class APiProvider {
   }
 
   Future<UniversalResponse> addProduct(ProductsModel product) async {
-    const apiUrl =
-        'https://fakestoreapi.com/products'; // Replace with your API endpoint
+    const apiUrl = 'https://fakestoreapi.com/products';
 
     try {
       final response = await http.post(
@@ -87,14 +77,10 @@ class APiProvider {
       );
 
       if (response.statusCode == 200) {
-        // Product deleted successfully
-        
-
         return UniversalResponse(
           data: ProductsModel.fromJson(jsonDecode(response.body)),
         );
       } else {
-        // Handle the API error
         return UniversalResponse(
           error: 'Error: ${response.statusCode}',
         );
@@ -105,10 +91,10 @@ class APiProvider {
       );
     }
   }
-  Future<UniversalResponse> addProductUpdate(ProductsModel product, int id) async {
-    final apiUrl =
-        'https://fakestoreapi.com/products/$id'; // Replace with your API endpoint
 
+  Future<UniversalResponse> addProductUpdate(
+      ProductsModel product, int id) async {
+    final apiUrl = 'https://fakestoreapi.com/products/$id';
     try {
       final response = await http.put(
         Uri.parse(apiUrl),
@@ -117,9 +103,6 @@ class APiProvider {
       );
 
       if (response.statusCode == 200) {
-        // Product deleted successfully
-        
-
         return UniversalResponse(
           data: ProductsModel.fromJson(jsonDecode(response.body)),
         );
