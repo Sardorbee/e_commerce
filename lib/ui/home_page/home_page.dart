@@ -1,8 +1,8 @@
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/ui/details_page/details_page.dart';
 import 'package:e_commerce/ui/home_page/add%20_page.dart';
 import 'package:flutter/material.dart';
-
 import 'package:e_commerce/services/repository/all_products_repo.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,6 +17,7 @@ class _HomePageState extends State<HomePage> {
   // agar categoriya bilan qilmoqchi bo'lsa /category/electronics yoziladi else bo'sh bo'ladi
   String? sort;
   int? limit;
+
   Map<String, String> categoryDisplayTextMap = {
     '/categories': 'All Categories',
     '/category/electronics': 'Electronics',
@@ -42,6 +43,7 @@ class _HomePageState extends State<HomePage> {
     category = categoryOptions[0];
     sort = sortOptions[0];
     limit = limitOptions[3];
+    // fetchCategoriesFromAPI();
   }
 
   @override
@@ -58,10 +60,11 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddPage(),
-                  ),);
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddPage(),
+                ),
+              );
             },
             icon: const Icon(
               Icons.add,
@@ -152,8 +155,6 @@ class _HomePageState extends State<HomePage> {
                     color: const Color(0xFFD3B398),
                   ),
                   child: PopupMenuButton<String>(
-                    child: const Text("Category"),
-
                     initialValue: category,
                     onSelected: (String newValue) {
                       setState(() {
@@ -169,7 +170,9 @@ class _HomePageState extends State<HomePage> {
                           child: Text(displayText),
                         );
                       }).toList();
+                      
                     },
+                    child:  Text("Category"),
                     // Remove or set the icon property to null to disable the icon
                     // icon: null,
                   ),
@@ -210,8 +213,7 @@ class _HomePageState extends State<HomePage> {
                         leading: Container(
                           width: 40,
                           child: CachedNetworkImage(
-                            height: 50,
-                            imageUrl:product.image),
+                              height: 50, imageUrl: product.image),
                         ),
                         title: Text(product.title),
                         trailing: Text("${product.price.toString()} \$"),
@@ -227,3 +229,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+
+// Future<List<String>> fetchCategoriesFromAPI() async {
+//     final response = await http.get(Uri.parse('https://fakestoreapi.com/products/categories')); // Replace 'API_URL' with your actual API endpoint
+
+//     if (response.statusCode == 200) {
+//       final data = jsonDecode(response.body);
+//       List<String> categories = List<String>.from(data);
+//       return categories;
+//     } else {
+//       throw Exception('Failed to fetch categories from API');
+//     }
+//   }
