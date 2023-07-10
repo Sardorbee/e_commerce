@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import '../../services/models/product_model/products_model.dart';
 
-
 class DetailsPage extends StatefulWidget {
   int? id;
   DetailsPage({super.key, required this.id});
@@ -21,13 +20,41 @@ class _DetailsPageState extends State<DetailsPage> {
         title: const Text("Details"),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+
+
+              
+
+
+
+            },
             icon: const Icon(
               Icons.edit,
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              final deleted = await AllProductsRepository.deleteProductByID(
+                  widget.id!.toInt());
+              final d = deleted[0];
+              setState(() {
+                
+              });
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(backgroundColor: Colors.red,
+                  content: Container(
+                    child: Column(
+                      children: [
+                        Text(
+                            "${d.title} Nomli mahsulot muvaffaqiyatli o'chirildi!"),
+                        
+                      ],
+                    ),
+                  ),
+                ),
+              );
+              
+            },
             icon: const Icon(
               Icons.delete,
             ),
@@ -41,7 +68,8 @@ class _DetailsPageState extends State<DetailsPage> {
         child: ListView(
           children: [
             FutureBuilder(
-              future: AllProductsRepository.fetchProductsByID(widget.id!.toInt()),
+              future:
+                  AllProductsRepository.fetchProductsByID(widget.id!.toInt()),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -56,10 +84,10 @@ class _DetailsPageState extends State<DetailsPage> {
                     child: Text('No data available'),
                   );
                 }
-            
+
                 final List<ProductsModel> dataa = snapshot.data;
                 final data = dataa[0];
-            
+
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   // crossAxisAlignment: CrossAxisAlignment.star?t,
@@ -131,7 +159,8 @@ class _DetailsPageState extends State<DetailsPage> {
                       alignment: Alignment.topLeft,
                       child: Text(
                         "Description",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                     ),
                     const SizedBox(

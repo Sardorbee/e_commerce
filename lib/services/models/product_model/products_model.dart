@@ -21,7 +21,7 @@ String productsModelToJson(List<ProductsModel> data) =>
 
 // ------------------------------------------------------------
 class ProductsModel {
-  int id;
+  int? id;
   String title;
   double price;
   String description;
@@ -30,7 +30,7 @@ class ProductsModel {
   RatingsModel? rating;
 
   ProductsModel({
-    required this.id,
+     this.id,
     required this.title,
     required this.price,
     required this.description,

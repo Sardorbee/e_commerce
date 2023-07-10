@@ -1,6 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce/ui/details_page/details_page.dart';
+import 'package:e_commerce/ui/home_page/add%20_page.dart';
 import 'package:flutter/material.dart';
 
+import '../../services/models/product_model/products_model.dart';
 import '../../services/repository/all_products_repo.dart';
 
 class HomePage extends StatefulWidget {
@@ -53,27 +56,18 @@ class _HomePageState extends State<HomePage> {
               Icons.search,
             ),
           ),
-
-          // PopupMenuButton(
-          //   onSelected: (_) {},
-          //   itemBuilder: (context) {
-          //     bool sortEnabled = true;
-          //     return [
-          //       PopupMenuItem(
-          //         onTap: () {},
-          //         enabled: sortEnabled,
-          //         padding: const EdgeInsets.all(0),
-          //         child: Text("A-Z"),
-          //       ),
-          //       PopupMenuItem(
-          //         onTap: () {},
-          //         enabled: sortEnabled,
-          //         padding: const EdgeInsets.all(0),
-          //         child: Text("Z-A"),
-          //       ),
-          //     ];
-          //   },
-          // ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddPage(),
+                  ),);
+            },
+            icon: const Icon(
+              Icons.add,
+            ),
+          )
         ],
       ),
       body: Padding(
@@ -209,8 +203,17 @@ class _HomePageState extends State<HomePage> {
                     itemBuilder: (BuildContext context, int index) {
                       final product = data[index];
                       return ListTile(
-                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => DetailsPage(id:product.id),)),
-                        leading: Image.network(product.image),
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailsPage(id: product.id),
+                            )),
+                        leading: Container(
+                          width: 40,
+                          child: CachedNetworkImage(
+                            height: 50,
+                            imageUrl:product.image),
+                        ),
                         title: Text(product.title),
                         trailing: Text("${product.price.toString()} \$"),
                       );
