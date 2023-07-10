@@ -1,8 +1,6 @@
-import 'package:e_commerce/ui/app_routes.dart';
 import 'package:e_commerce/ui/favorite_page/favourite_page.dart';
 import 'package:e_commerce/ui/home_page/home_page.dart';
 import 'package:e_commerce/ui/cart_page/cart_page.dart';
-import 'package:e_commerce/ui/login_page/login_page.dart';
 import 'package:e_commerce/ui/profile_page/profile_page.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +23,8 @@ class _MyAppState extends State<MyApp> {
     const HomePage(),
     const FavouritePage(),
     const CartPage(),
-     LoginPage(),
+    //  LoginPage(),
+    const ProfilePage()
   ];
 
   void _onTabTapped(int index) {
