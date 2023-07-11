@@ -1,7 +1,7 @@
 import 'package:e_commerce/services/apis/all_products.dart';
 import 'package:e_commerce/services/repository/all_products_repo.dart';
-import 'package:e_commerce/ui/details_page/widgets/appbar_icons.dart';
 import 'package:e_commerce/ui/details_page/widgets/listview.dart';
+import 'package:e_commerce/ui/home_page/widgets/textfield.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/models/product_model/products_model.dart';
@@ -9,15 +9,20 @@ import '../../services/models/product_model/products_model.dart';
 // ignore: must_be_immutable
 class DetailsPage extends StatefulWidget {
   int? id;
-  final APiProvider aPiProvider;
-  DetailsPage({super.key, required this.id, required this.aPiProvider});
+  // final APiProvider aPiProvider;
+  DetailsPage({
+    super.key,
+    required this.id,
+  });
 
   @override
   State<DetailsPage> createState() => _DetailsPageState();
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  late AllProductsRepository repo;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  // late AllProductsRepository repo;
   ProductsModel? data;
   TextEditingController titlecont = TextEditingController();
   TextEditingController pricecont = TextEditingController();
@@ -25,8 +30,8 @@ class _DetailsPageState extends State<DetailsPage> {
   TextEditingController imagecont = TextEditingController();
   TextEditingController catcont = TextEditingController();
   d() async {
-    final daa =
-        await repo.fetchProductsByID(widget.id!.toInt());
+    final daa = await AllProductsRepository(aPiProvider: APiProvider())
+        .fetchProductsByID(widget.id!.toInt());
     setState(() {
       data = daa[0];
     });
@@ -35,26 +40,104 @@ class _DetailsPageState extends State<DetailsPage> {
 
   @override
   void initState() {
-    repo = AllProductsRepository(aPiProvider: widget.aPiProvider);
     d();
 
     super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
+  void dispose() {
+    titlecont.dispose();
+    pricecont.dispose();
+    desccont.dispose();
+    imagecont.dispose();
+    catcont.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext dcontext) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: const Text("Details"),
         actions: [
-          AppbarIcons(
-              titlecont: titlecont,
-              data: data,
-              pricecont: pricecont,
-              desccont: desccont,
-              imagecont: imagecont,
-              catcont: catcont,
-              widget: widget),
+          IconButton(
+            onPressed: () {
+              titlecont.text = data!.title;
+              pricecont.text = data!.price.toString();
+              desccont.text = data!.description;
+              imagecont.text = data!.image;
+              catcont.text = data!.category;
+              showDialog(
+                
+                context:  _scaffoldKey.currentContext! ,
+                builder: (BuildContext context) {
+                  return Dialog(
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      height: 500,
+                      child: Column(
+                        children: [
+                          const Text(
+                            "Update",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          MyTextField(controller: titlecont),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          MyTextField(controller: pricecont),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          MyTextField(controller: desccont),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          MyTextField(controller: imagecont),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          MyTextField(controller: catcont),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          ElevatedButton(
+                              onPressed: () async {
+                                ProductsModel product = ProductsModel(
+                                    title: titlecont.text,
+                                    price: double.parse(pricecont.text),
+                                    description: desccont.text,
+                                    category: catcont.text,
+                                    image: imagecont.text);
+                                Navigator.pop(context);
+
+                                // ignore: unused_local_variable
+                                final d = await AllProductsRepository(
+                                        aPiProvider: APiProvider())
+                                    .addProductUpdate(
+                                        product, widget.id!.toInt());
+
+                                ScaffoldMessenger.of(dcontext).showSnackBar(
+                                    SnackBar(content: Text("${data!.id} dagi element o'chirildi")));
+                              },
+                              child: const Text("Update Product"))
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+            icon: const Icon(
+              Icons.edit,
+            ),
+          ),
           IconButton(
             onPressed: () async {
               // ignore: use_build_context_synchronously
@@ -71,12 +154,12 @@ class _DetailsPageState extends State<DetailsPage> {
                       ),
                       TextButton(
                         onPressed: () async {
-                          final deleted =
-                              await repo.deleteProductByID(
-                                  widget.id!.toInt());
+                          final deleted = await AllProductsRepository(
+                                  aPiProvider: APiProvider())
+                              .deleteProductByID(widget.id!.toInt());
                           final d = deleted[0];
                           // ignore: use_build_context_synchronously
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          ScaffoldMessenger.of(dcontext).showSnackBar(
                             SnackBar(
                               backgroundColor: Colors.red,
                               content: Column(

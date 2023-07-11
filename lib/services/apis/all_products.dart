@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:e_commerce/services/universal_response.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/product_model/products_model.dart';
@@ -12,17 +13,17 @@ class APiProvider {
     const apiUrl = 'https://fakestoreapi.com/auth/login';
 
     try {
+      print(1);
       final response = await http.post(
         Uri.parse(apiUrl),
-        headers: {'Content-Type': 'application/json'},
-        body: {
-          {"username": username, "password": password}
-        },
+        body: {"username": username, "password": password},
       );
+      print(2);
 
       if (response.statusCode == 200) {
+        print(response.statusCode);
         return UniversalResponse(
-          data: jsonDecode(response.body)["token"],
+          data: jsonDecode(response.body)['token'],
         );
       } else {
         return UniversalResponse(

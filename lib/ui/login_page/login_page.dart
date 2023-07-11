@@ -1,7 +1,32 @@
+import 'package:e_commerce/main.dart';
+import 'package:e_commerce/services/apis/all_products.dart';
+import 'package:e_commerce/services/repository/all_products_repo.dart';
+import 'package:e_commerce/ui/login_page/widgets/positioned_widget.dart';
+import 'package:e_commerce/ui/tab_page/tab_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 
-// ignore: use_key_in_widget_constructors
-class LoginPage extends StatelessWidget {
+// ignore: use_key_in_widget_constructors, must_be_immutable
+class LoginPage extends StatefulWidget {
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  update() {
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    update();
+    super.initState();
+  }
+
+  TextEditingController emailCont = TextEditingController();
+
+  TextEditingController passwordCont = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -9,35 +34,20 @@ class LoginPage extends StatelessWidget {
         color: const Color(0xFF1E1F28), // Background color
         child: Stack(
           children: [
-            const Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  'Login',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const FlutterLogo(
-                    size: 120,
-                    textColor: Colors.white,
-                  ),
-                  const SizedBox(height: 30),
-                  const Text(
-                    'Welcome to MyApp',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                  Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: const Text(
+                      'L o g i n',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 30),
@@ -46,6 +56,7 @@ class LoginPage extends StatelessWidget {
                     child: Column(
                       children: [
                         TextFormField(
+                          controller: emailCont,
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
                             hintText: 'Email',
@@ -64,6 +75,7 @@ class LoginPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 20),
                         TextFormField(
+                          controller: passwordCont,
                           style: const TextStyle(color: Colors.white),
                           obscureText: true,
                           decoration: InputDecoration(
@@ -85,7 +97,20 @@ class LoginPage extends StatelessWidget {
                         SizedBox(
                           width: double.infinity, // Take full width
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              await AllProductsRepository(
+                                      aPiProvider: APiProvider())
+                                  .loginrepo(emailCont.text, passwordCont.text);
+                              print(31);
+                              if (context.mounted) {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MyApp(),
+                                    ),
+                                    (route) => false);
+                              }
+                            },
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
                                   const Color(0xFFEF3651)), // Button color
@@ -127,53 +152,7 @@ class LoginPage extends StatelessWidget {
                 ],
               ),
             ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 20,
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 32),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 92,
-                      height: 64,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.facebook),
-                        color: Colors.black,
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      width: 92,
-                      height: 64,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.g_translate),
-                        color: Colors.black,
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            const PositionedWW(),
           ],
         ),
       ),

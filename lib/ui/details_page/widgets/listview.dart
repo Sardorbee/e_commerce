@@ -22,7 +22,7 @@ class ListviewFuture extends StatelessWidget {
     return ListView(
       children: [
         FutureBuilder(
-          future: AllProductsRepository(aPiProvider: widget.aPiProvider).fetchProductsByID(widget.id!.toInt()),
+          future: AllProductsRepository(aPiProvider: APiProvider()).fetchProductsByID(widget.id!.toInt()),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(

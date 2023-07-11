@@ -2,7 +2,7 @@
 
 // import 'package:e_commerce/services/apis/all_products.dart';
 // import 'package:e_commerce/ui/splash_page/splash.dart';
-import 'package:e_commerce/ui/tab_page/tab_page.dart';
+import 'package:e_commerce/ui/splash_page/splash.dart';
 // import 'package:flutter/material.dart';
 
 // void main() async {
@@ -20,7 +20,6 @@ import 'package:e_commerce/ui/tab_page/tab_page.dart';
 
 // class _MyAppState extends State<MyApp> {
 //   APiProvider aPiProvider = APiProvider();
-  
 
 //   @override
 //   Widget build(BuildContext context) {
@@ -38,14 +37,16 @@ import 'package:e_commerce/ui/tab_page/tab_page.dart';
 //     );
 //   }
 // }
-import 'dart:async';
 
 import 'package:e_commerce/services/apis/all_products.dart';
-import 'package:e_commerce/ui/splash_page/splash.dart';
+import 'package:e_commerce/utils/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 
 void main() async {
   runApp(const MyApp());
+
+  await GetStorage.init();
 }
 
 class MyApp extends StatefulWidget {
@@ -60,7 +61,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   APiProvider aPiProvider = APiProvider();
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -68,7 +68,9 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 133, 94, 199),
+
+          background: AppColors.mainBg,
+          seedColor: AppColors.mainBg,
         ),
       ),
       home: Builder(
@@ -77,8 +79,9 @@ class _MyAppState extends State<MyApp> {
           return Navigator(
             onGenerateRoute: (settings) {
               return MaterialPageRoute(
-                builder: (context) => SplashPage(aPiProvider: aPiProvider),
-
+                builder: (context) =>
+                    // LoginPage()
+                    SplashPage(aPiProvider: aPiProvider),
               );
             },
           );

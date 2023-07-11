@@ -234,7 +234,7 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => DetailsPage(
-                          id: product.id, aPiProvider: widget.apiProvider),
+                          id: product.id, ),
                     )),
                 leading: SizedBox(
                   width: 40,

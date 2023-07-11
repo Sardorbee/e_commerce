@@ -1,7 +1,9 @@
 import 'package:e_commerce/services/apis/all_products.dart';
 import 'package:e_commerce/services/models/user_model/user_model.dart';
 import 'package:e_commerce/services/repository/user_repo.dart';
+import 'package:e_commerce/ui/login_page/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, required this.apiProvider});
@@ -12,6 +14,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final box = GetStorage();
   late UserRepo userRepo;
 
   @override
@@ -23,6 +26,39 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Confirmation'),
+              content: const Text('Are you sure you want to log out?'),
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    await box.remove('isloggedIn');
+                    if (context.mounted) {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginPage(),
+                          ),
+                          (route) => false);
+                    }
+                  },
+                  child: const Text('Yes'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: const Text('No'),
+                ),
+              ],
+            );
+          },
+        );
+      }, child: Icon(Icons.logout)),
       appBar: AppBar(
         title: const Text("Profile Page"),
       ),
