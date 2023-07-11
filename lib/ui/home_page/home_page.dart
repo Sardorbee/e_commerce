@@ -1,18 +1,20 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:e_commerce/services/apis/all_products.dart';
 import 'package:e_commerce/ui/details_page/details_page.dart';
 import 'package:e_commerce/ui/home_page/add_page.dart';
 import 'package:flutter/material.dart';
 import 'package:e_commerce/services/repository/all_products_repo.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.apiProvider});
+  final APiProvider apiProvider;
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  late AllProductsRepository rePo;
   String? category;
   // agar categoriya bilan qilmoqchi bo'lsa /category/electronics yoziladi else bo'sh bo'ladi
   String? sort;
@@ -39,6 +41,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+   rePo =  AllProductsRepository(aPiProvider: widget.apiProvider);
     super.initState();
     category = categoryOptions[0];
     sort = sortOptions[0];
@@ -62,7 +65,8 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const AddPage(),
+                  builder: (context) =>
+                      AddPage(aPiProvider: widget.apiProvider),
                 ),
               );
             },
@@ -171,63 +175,66 @@ class _HomePageState extends State<HomePage> {
                           child: Text(displayText),
                         );
                       }).toList();
-                      
                     },
-                    child:  const Text("Category"),
+                    child: const Text("Category"),
                     // Remove or set the icon property to null to disable the icon
                     // icon: null,
                   ),
                 ),
               ],
             ),
-            Expanded(
-              child: FutureBuilder(
-                future: AllProductsRepository.fetchCurrencies(
-                    category.toString(), sort.toString(), limit),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    );
-                  } else if (!snapshot.hasData) {
-                    return const Center(
-                      child: Text('No data available'),
-                    );
-                  }
-
-                  final data = snapshot.data;
-
-                  return ListView.builder(
-                    itemCount: data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final product = data[index];
-                      return ListTile(
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailsPage(id: product.id),
-                            )),
-                        leading: SizedBox(
-                          width: 40,
-                          child: CachedNetworkImage(
-                              height: 50, imageUrl: product.image),
-                        ),
-                        title: Text(product.title),
-                        trailing: Text("${product.price.toString()} \$"),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
+            futureBuilder(),
           ],
         ),
       ),
     );
+  }
+
+  Expanded futureBuilder() {
+    return Expanded(
+            child: FutureBuilder(
+              future: rePo.fetchAllProducts(
+                  category.toString(), sort.toString(), limit),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
+                } else if (!snapshot.hasData) {
+                  return const Center(
+                    child: Text('No data available'),
+                  );
+                }
+
+                final data = snapshot.data;
+
+                return ListView.builder(
+                  itemCount: data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final product = data[index];
+                    return ListTile(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailsPage(id: product.id, aPiProvider: widget.apiProvider),
+                          )),
+                      leading: SizedBox(
+                        width: 40,
+                        child: CachedNetworkImage(
+                            height: 50, imageUrl: product.image),
+                      ),
+                      title: Text(product.title),
+                      trailing: Text("${product.price.toString()} \$"),
+                    );
+                  },
+                );
+              },
+            ),
+          );
   }
 }
 

@@ -1,3 +1,4 @@
+import 'package:e_commerce/services/apis/all_products.dart';
 import 'package:e_commerce/services/repository/all_products_repo.dart';
 import 'package:e_commerce/ui/details_page/widgets/appbar_icons.dart';
 import 'package:e_commerce/ui/details_page/widgets/listview.dart';
@@ -8,13 +9,15 @@ import '../../services/models/product_model/products_model.dart';
 // ignore: must_be_immutable
 class DetailsPage extends StatefulWidget {
   int? id;
-  DetailsPage({super.key, required this.id});
+  final APiProvider aPiProvider;
+  DetailsPage({super.key, required this.id, required this.aPiProvider});
 
   @override
   State<DetailsPage> createState() => _DetailsPageState();
 }
 
 class _DetailsPageState extends State<DetailsPage> {
+  late AllProductsRepository repo;
   ProductsModel? data;
   TextEditingController titlecont = TextEditingController();
   TextEditingController pricecont = TextEditingController();
@@ -23,7 +26,7 @@ class _DetailsPageState extends State<DetailsPage> {
   TextEditingController catcont = TextEditingController();
   d() async {
     final daa =
-        await AllProductsRepository.fetchProductsByID(widget.id!.toInt());
+        await repo.fetchProductsByID(widget.id!.toInt());
     setState(() {
       data = daa[0];
     });
@@ -32,6 +35,7 @@ class _DetailsPageState extends State<DetailsPage> {
 
   @override
   void initState() {
+    repo = AllProductsRepository(aPiProvider: widget.aPiProvider);
     d();
 
     super.initState();
@@ -67,9 +71,8 @@ class _DetailsPageState extends State<DetailsPage> {
                       ),
                       TextButton(
                         onPressed: () async {
-                          
                           final deleted =
-                              await AllProductsRepository.deleteProductByID(
+                              await repo.deleteProductByID(
                                   widget.id!.toInt());
                           final d = deleted[0];
                           // ignore: use_build_context_synchronously
@@ -86,10 +89,6 @@ class _DetailsPageState extends State<DetailsPage> {
                           );
                           // ignore: use_build_context_synchronously
                           Navigator.pop(context);
-                          
-                          
-                          
-                          
                         },
                         child: const Text(
                           "Yes",

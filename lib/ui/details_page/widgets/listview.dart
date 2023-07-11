@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:e_commerce/services/apis/all_products.dart';
 import 'package:flutter/material.dart';
 
 import '../../../services/models/product_model/products_model.dart';
@@ -6,10 +7,13 @@ import '../../../services/repository/all_products_repo.dart';
 import '../details_page.dart';
 
 class ListviewFuture extends StatelessWidget {
-  const ListviewFuture({
+  
+   ListviewFuture({
     super.key,
     required this.widget,
+    
   });
+ 
 
   final DetailsPage widget;
 
@@ -18,8 +22,7 @@ class ListviewFuture extends StatelessWidget {
     return ListView(
       children: [
         FutureBuilder(
-          future:
-              AllProductsRepository.fetchProductsByID(widget.id!.toInt()),
+          future: AllProductsRepository(aPiProvider: widget.aPiProvider).fetchProductsByID(widget.id!.toInt()),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
@@ -109,8 +112,7 @@ class ListviewFuture extends StatelessWidget {
                   alignment: Alignment.topLeft,
                   child: Text(
                     "Description",
-                    style: TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(

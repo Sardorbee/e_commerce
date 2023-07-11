@@ -83,7 +83,7 @@ class AppbarIcons extends StatelessWidget {
 
                           // ignore: unused_local_variable
                           final d =
-                              await AllProductsRepository.addProductUpdate(
+                              await AllProductsRepository(aPiProvider: widget.aPiProvider).addProductUpdate(
                                   product, widget.id!.toInt());
                           // ignore: use_build_context_synchronously
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(

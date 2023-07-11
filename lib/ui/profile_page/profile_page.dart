@@ -1,15 +1,25 @@
-import 'package:e_commerce/services/apis/user_api.dart';
+import 'package:e_commerce/services/apis/all_products.dart';
 import 'package:e_commerce/services/models/user_model/user_model.dart';
+import 'package:e_commerce/services/repository/user_repo.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key, required this.apiProvider});
+  final APiProvider apiProvider;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  late UserRepo userRepo;
+
+  @override
+  void initState() {
+    userRepo = UserRepo(aPiProvider: widget.apiProvider);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
           8,
         ),
         child: FutureBuilder(
-          future: UserProvider().getUsers(),
+          future: userRepo.getUsers(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
@@ -37,7 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
               );
             }
             final List<UserModel> dataa = snapshot.data;
-           
+
             final data = dataa[0];
 
             return Column(

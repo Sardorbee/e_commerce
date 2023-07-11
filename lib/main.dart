@@ -1,7 +1,5 @@
-import 'package:e_commerce/ui/favorite_page/favourite_page.dart';
-import 'package:e_commerce/ui/home_page/home_page.dart';
-import 'package:e_commerce/ui/cart_page/cart_page.dart';
-import 'package:e_commerce/ui/profile_page/profile_page.dart';
+import 'package:e_commerce/services/apis/all_products.dart';
+import 'package:e_commerce/ui/tab_page/tab_page.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -9,29 +7,16 @@ void main() async {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key, });
+  const MyApp({
+    super.key,
+  });
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  int _currentIndex = 0;
-
-  final List<Widget> _pages = [
-    // RouteNames.home,
-    const HomePage(),
-    const FavouritePage(),
-    const CartPage(),
-    //  LoginPage(),
-    const ProfilePage()
-  ];
-
-  void _onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
+  APiProvider aPiProvider = APiProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -43,34 +28,7 @@ class _MyAppState extends State<MyApp> {
           seedColor: const Color.fromARGB(255, 133, 94, 199),
         ),
       ),
-      home: Scaffold(
-        body: _pages[_currentIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: _onTabTapped,
-          backgroundColor: Colors.white,
-          selectedItemColor: Colors.deepPurple,
-          unselectedItemColor: Colors.grey,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.favorite),
-              label: 'Favourite',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart),
-              label: 'Cart',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-          ],
-        ),
-      ),
+      home: Tabscreen(apiProvider: aPiProvider),
     );
   }
 }

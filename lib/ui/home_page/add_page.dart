@@ -1,3 +1,4 @@
+import 'package:e_commerce/services/apis/all_products.dart';
 import 'package:e_commerce/ui/home_page/widgets/textfield.dart';
 import 'package:flutter/material.dart';
 
@@ -5,18 +6,25 @@ import '../../services/models/product_model/products_model.dart';
 import '../../services/repository/all_products_repo.dart';
 
 class AddPage extends StatefulWidget {
-  const AddPage({super.key});
+  const AddPage({super.key, required this.aPiProvider});
+  final APiProvider aPiProvider;
 
   @override
   State<AddPage> createState() => _AddPageState();
 }
 
 class _AddPageState extends State<AddPage> {
+  late AllProductsRepository repoo;
   TextEditingController titlecont = TextEditingController();
   TextEditingController pricecont = TextEditingController();
   TextEditingController descriptioncont = TextEditingController();
   TextEditingController categorycont = TextEditingController();
   TextEditingController imagecont = TextEditingController();
+  @override
+  void initState() {
+    repoo = AllProductsRepository(aPiProvider: widget.aPiProvider);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +85,7 @@ class _AddPageState extends State<AddPage> {
                       image: imagecont.text,
                     );
                     final dataa =
-                        await AllProductsRepository.addProducts(newProduct);
+                        await repoo.addProducts(newProduct);
                     final data = dataa[0];
                     // ignore: use_build_context_synchronously
                     Navigator.pop(context);
