@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-   rePo =  AllProductsRepository(aPiProvider: widget.apiProvider);
+    rePo = AllProductsRepository(aPiProvider: widget.apiProvider);
     super.initState();
     category = categoryOptions[0];
     sort = sortOptions[0];
@@ -86,14 +86,10 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: const EdgeInsets.only(
-                    top: 8,
-                    left: 8,
-                    right: 8,
-                  ),
+                  padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
                   margin: const EdgeInsets.symmetric(vertical: 10),
-                  width: 75,
-                  height: 28,
+                  height: 40,
+                  width: 120,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color(0xFFD3B398),
@@ -110,26 +106,33 @@ class _HomePageState extends State<HomePage> {
                         return sortOptions.map((String value) {
                           return PopupMenuItem<String>(
                             value: value,
-                            child: Text(value),
+                            child: Text(
+                              value,
+                            ),
                           );
                         }).toList();
                       },
                       // Remove or set the icon property to null to disable the icon
                       // icon: null,
-                      child: const Text("Sort"),
+                      child: const Center(
+                        child: Text(
+                          "Sort",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
                     ),
                   ),
                 ),
                 Container(
-                  width: 75,
                   padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-                  height: 28,
+                  height: 40,
+                  width: 120,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color(0xFFD3B398),
                   ),
                   child: Center(
-                    child: PopupMenuButton<int>(
+                    child: PopupMenuButton<int>(position: PopupMenuPosition.under,
                       initialValue: limit,
                       onSelected: (int? newValue) {
                         setState(() {
@@ -141,20 +144,25 @@ class _HomePageState extends State<HomePage> {
                           return PopupMenuItem<int>(
                             value: value,
                             // ignore: unrelated_type_equality_checks
-                            child: Text(value == '' ? "All" : value.toString()),
+                            child: Text(
+                              value == '' ? "All" : value.toString(),
+                            ),
                           );
                         }).toList();
                       },
-                      child: Text(limit.toString()),
+                      child: Text(
+                        limit.toString(),
+                        style: TextStyle(fontSize: 18),
+                      ),
                       // Remove or set the icon property to null to disable the icon
                       // icon: null,
                     ),
                   ),
                 ),
                 Container(
-                  width: 75,
+                  height: 40,
+                  width: 120,
                   padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-                  height: 28,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color(0xFFD3B398),
@@ -176,7 +184,12 @@ class _HomePageState extends State<HomePage> {
                         );
                       }).toList();
                     },
-                    child: const Text("Category"),
+                    child: Center(
+                      child:  Text(
+                        "Category",
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ),
                     // Remove or set the icon property to null to disable the icon
                     // icon: null,
                   ),
@@ -192,49 +205,50 @@ class _HomePageState extends State<HomePage> {
 
   Expanded futureBuilder() {
     return Expanded(
-            child: FutureBuilder(
-              future: rePo.fetchAllProducts(
-                  category.toString(), sort.toString(), limit),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  );
-                } else if (!snapshot.hasData) {
-                  return const Center(
-                    child: Text('No data available'),
-                  );
-                }
+      child: FutureBuilder(
+        future:
+            rePo.fetchAllProducts(category.toString(), sort.toString(), limit),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else if (!snapshot.hasData) {
+            return const Center(
+              child: Text('No data available'),
+            );
+          }
 
-                final data = snapshot.data;
+          final data = snapshot.data;
 
-                return ListView.builder(
-                  itemCount: data.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final product = data[index];
-                    return ListTile(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailsPage(id: product.id, aPiProvider: widget.apiProvider),
-                          )),
-                      leading: SizedBox(
-                        width: 40,
-                        child: CachedNetworkImage(
-                            height: 50, imageUrl: product.image),
-                      ),
-                      title: Text(product.title),
-                      trailing: Text("${product.price.toString()} \$"),
-                    );
-                  },
-                );
-              },
-            ),
+          return ListView.builder(
+            itemCount: data.length,
+            itemBuilder: (BuildContext context, int index) {
+              final product = data[index];
+              return ListTile(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailsPage(
+                          id: product.id, aPiProvider: widget.apiProvider),
+                    )),
+                leading: SizedBox(
+                  width: 40,
+                  child:
+                      CachedNetworkImage(height: 50, imageUrl: product.image),
+                ),
+                title: Text(product.title),
+                trailing: Text("${product.price.toString()} \$"),
+              );
+            },
           );
+        },
+      ),
+    );
   }
 }
 
