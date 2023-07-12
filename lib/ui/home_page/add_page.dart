@@ -94,25 +94,24 @@ class _AddPageState extends State<AddPage> {
                         pricecont.text.isNotEmpty &&
                         descriptioncont.text.isNotEmpty &&
                         imagecont.text.isNotEmpty) {
-                          final dataa = await repoo.addProducts(newProduct);
-                          final data = dataa[0];
-                          Navigator.pop(context);
-                    // ignore: use_build_context_synchronously
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: Colors.green,
-                        content: Column(
-                          children: [
-                            Text(
-                                "Mahsulot :  ${data.title} nomida, ${data.id} id da magazinga qo'shildi!")
-                          ],
+                      final dataa = await repoo.addProducts(newProduct);
+                      final data = dataa[0];
+                      Navigator.pop(context);
+                      // ignore: use_build_context_synchronously
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.green,
+                          content: Column(
+                            children: [
+                              Text(
+                                  "Mahsulot :  ${data.title} nomida, ${data.id} id da magazinga qo'shildi!")
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                        }
-                    
+                      );
+                    }
+
                     // ignore: use_build_context_synchronously
-                    
                   },
                   child: const Text(
                     "Add Product",

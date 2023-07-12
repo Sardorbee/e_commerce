@@ -76,6 +76,7 @@ class _DetailsPageState extends State<DetailsPage> {
                 context: _scaffoldKey.currentContext!,
                 builder: (BuildContext context) {
                   return Dialog(
+                    backgroundColor: AppColors.itemBg,
                     child: Container(
                       padding: const EdgeInsets.all(10),
                       height: 500,
@@ -84,7 +85,9 @@ class _DetailsPageState extends State<DetailsPage> {
                           const Text(
                             "Update",
                             style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(
                             height: 5,
