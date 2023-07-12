@@ -1,12 +1,11 @@
 import 'package:e_commerce/services/apis/all_products.dart';
-import 'package:e_commerce/ui/cart_page/cart_page.dart';
-import 'package:e_commerce/ui/favorite_page/favourite_page.dart';
 import 'package:e_commerce/ui/home_page/home_page.dart';
 import 'package:e_commerce/ui/profile_page/profile_page.dart';
+import 'package:e_commerce/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class Tabscreen extends StatefulWidget {
-  const Tabscreen({super.key,required this.apiProvider});
+  const Tabscreen({super.key, required this.apiProvider});
   final APiProvider apiProvider;
 
   @override
@@ -20,10 +19,13 @@ class _TabscreenState extends State<Tabscreen> {
 
   @override
   void initState() {
-    _pages.add( HomePage(apiProvider: widget.apiProvider,));
-    _pages.add(const FavouritePage());
-    _pages.add(const CartPage());
-    _pages.add( ProfilePage(apiProvider: widget.apiProvider,));
+    _pages.add(HomePage(
+      apiProvider: widget.apiProvider,
+    ));
+
+    _pages.add(ProfilePage(
+      apiProvider: widget.apiProvider,
+    ));
     super.initState();
   }
 
@@ -43,24 +45,17 @@ class _TabscreenState extends State<Tabscreen> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onTabTapped,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.mainBg,
         selectedItemColor: Colors.deepPurple,
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(
+            backgroundColor: Colors.amber,
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
-            label: 'Favourite',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Cart',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
             label: 'Profile',
           ),
         ],

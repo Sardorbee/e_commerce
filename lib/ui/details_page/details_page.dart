@@ -2,6 +2,7 @@ import 'package:e_commerce/services/apis/all_products.dart';
 import 'package:e_commerce/services/repository/all_products_repo.dart';
 import 'package:e_commerce/ui/details_page/widgets/listview.dart';
 import 'package:e_commerce/ui/home_page/widgets/textfield.dart';
+import 'package:e_commerce/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/models/product_model/products_model.dart';
@@ -32,9 +33,9 @@ class _DetailsPageState extends State<DetailsPage> {
   d() async {
     final daa = await AllProductsRepository(aPiProvider: APiProvider())
         .fetchProductsByID(widget.id!.toInt());
-    setState(() {
-      data = daa[0];
-    });
+
+    data = daa[0];
+
     (data);
   }
 
@@ -58,8 +59,10 @@ class _DetailsPageState extends State<DetailsPage> {
   @override
   Widget build(BuildContext dcontext) {
     return Scaffold(
+      backgroundColor: AppColors.mainBg,
       key: _scaffoldKey,
       appBar: AppBar(
+        backgroundColor: AppColors.mainBg,
         title: const Text("Details"),
         actions: [
           IconButton(
@@ -70,8 +73,7 @@ class _DetailsPageState extends State<DetailsPage> {
               imagecont.text = data!.image;
               catcont.text = data!.category;
               showDialog(
-                
-                context:  _scaffoldKey.currentContext! ,
+                context: _scaffoldKey.currentContext!,
                 builder: (BuildContext context) {
                   return Dialog(
                     child: Container(
@@ -124,7 +126,9 @@ class _DetailsPageState extends State<DetailsPage> {
                                         product, widget.id!.toInt());
 
                                 ScaffoldMessenger.of(dcontext).showSnackBar(
-                                    SnackBar(content: Text("${data!.id} dagi element o'chirildi")));
+                                    SnackBar(
+                                        content: Text(
+                                            "${data!.id} dagi element o'chirildi")));
                               },
                               child: const Text("Update Product"))
                         ],

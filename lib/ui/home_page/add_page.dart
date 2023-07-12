@@ -1,5 +1,6 @@
 import 'package:e_commerce/services/apis/all_products.dart';
 import 'package:e_commerce/ui/home_page/widgets/textfield.dart';
+import 'package:e_commerce/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../services/models/product_model/products_model.dart';
@@ -29,7 +30,11 @@ class _AddPageState extends State<AddPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: AppColors.mainBg,
+      appBar: AppBar(
+        title: Text("Add Product "),
+        backgroundColor: AppColors.mainBg,
+      ),
       body: ListView(
         children: [
           Padding(
@@ -84,11 +89,14 @@ class _AddPageState extends State<AddPage> {
                       category: categorycont.text,
                       image: imagecont.text,
                     );
-                    final dataa =
-                        await repoo.addProducts(newProduct);
-                    final data = dataa[0];
-                    // ignore: use_build_context_synchronously
-                    Navigator.pop(context);
+                    if (categorycont.text.isNotEmpty &&
+                        titlecont.text.isNotEmpty &&
+                        pricecont.text.isNotEmpty &&
+                        descriptioncont.text.isNotEmpty &&
+                        imagecont.text.isNotEmpty) {
+                          final dataa = await repoo.addProducts(newProduct);
+                          final data = dataa[0];
+                          Navigator.pop(context);
                     // ignore: use_build_context_synchronously
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -101,6 +109,10 @@ class _AddPageState extends State<AddPage> {
                         ),
                       ),
                     );
+                        }
+                    
+                    // ignore: use_build_context_synchronously
+                    
                   },
                   child: const Text(
                     "Add Product",

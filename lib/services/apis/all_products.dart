@@ -13,15 +13,15 @@ class APiProvider {
     const apiUrl = 'https://fakestoreapi.com/auth/login';
 
     try {
-      print(1);
+      
       final response = await http.post(
         Uri.parse(apiUrl),
         body: {"username": username, "password": password},
       );
-      print(2);
+      
 
       if (response.statusCode == 200) {
-        print(response.statusCode);
+        print(response.body);
         return UniversalResponse(
           data: jsonDecode(response.body)['token'],
         );

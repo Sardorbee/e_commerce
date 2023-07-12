@@ -3,6 +3,7 @@ import 'package:e_commerce/services/apis/all_products.dart';
 import 'package:e_commerce/services/repository/all_products_repo.dart';
 import 'package:e_commerce/ui/login_page/widgets/positioned_widget.dart';
 import 'package:e_commerce/ui/tab_page/tab_page.dart';
+import 'package:e_commerce/utils/util_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -13,6 +14,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool _isvisiblee = false;
   update() {
     setState(() {});
   }
@@ -98,18 +100,44 @@ class _LoginPageState extends State<LoginPage> {
                           width: double.infinity, // Take full width
                           child: ElevatedButton(
                             onPressed: () async {
-                              await AllProductsRepository(
-                                      aPiProvider: APiProvider())
-                                  .loginrepo(emailCont.text, passwordCont.text);
-                              print(31);
-                              if (context.mounted) {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => MyApp(),
-                                    ),
-                                    (route) => false);
-                              }
+                              
+                              if (emailCont.text.isNotEmpty &&
+                                  passwordCont.text.isNotEmpty) {
+                                    setState(() {
+                                    _isvisiblee = true;
+                                  });
+                                final dataaa = await AllProductsRepository(
+                                        aPiProvider: APiProvider())
+                                    .loginrepo(
+                                        emailCont.text, passwordCont.text);
+
+                                if (dataaa != null) {
+                                  setState(() {
+                                    _isvisiblee = false;
+                                  });
+                                  if (context.mounted) {
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => const MyApp(),
+                                        ),
+                                        (route) => false);
+                                  }
+                                  
+                                } else {
+                                  if (context.mounted) {
+                                    showMessage(
+                                        context, "Login yoki parol xato");
+                                  }
+                                  setState(() {
+                                    _isvisiblee = false;
+                                  });
+                                  
+                                }
+                              } else {
+                                showMessage(
+                                    context, "Login Yoki Parol kiritmadingiz");
+                                }
                             },
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
@@ -153,6 +181,11 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             const PositionedWW(),
+            Visibility(
+                visible: _isvisiblee,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ))
           ],
         ),
       ),

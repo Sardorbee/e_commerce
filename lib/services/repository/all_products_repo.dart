@@ -10,16 +10,15 @@ class AllProductsRepository {
   AllProductsRepository({required this.aPiProvider});
   APiProvider? aPiProvider;
 
-  Future loginrepo(
-      String username, String password) async {
+  Future loginrepo(String username, String password) async {
     UniversalResponse universalResponse =
         await aPiProvider!.logintoProducts(username, password);
 
     if (universalResponse.error.isEmpty) {
-     await box.write('isloggedIn', true);
-      
-        return universalResponse.data as String;
-      
+      print(universalResponse.data);
+      await box.write('isloggedIn', true);
+
+      return universalResponse.data as String;
     }
     return print(32);
   }

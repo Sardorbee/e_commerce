@@ -2,6 +2,7 @@ import 'package:e_commerce/services/apis/all_products.dart';
 import 'package:e_commerce/services/models/user_model/user_model.dart';
 import 'package:e_commerce/services/repository/user_repo.dart';
 import 'package:e_commerce/ui/login_page/login_page.dart';
+import 'package:e_commerce/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -26,39 +27,42 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Confirmation'),
-              content: const Text('Are you sure you want to log out?'),
-              actions: [
-                TextButton(
-                  onPressed: () async {
-                    await box.remove('isloggedIn');
-                    if (context.mounted) {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginPage(),
-                          ),
-                          (route) => false);
-                    }
-                  },
-                  child: const Text('Yes'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
-                  },
-                  child: const Text('No'),
-                ),
-              ],
+      backgroundColor: AppColors.mainBg,
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Confirmation'),
+                  content: const Text('Are you sure you want to log out?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () async {
+                        await box.remove('isloggedIn');
+                        if (context.mounted) {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ),
+                              (route) => false);
+                        }
+                      },
+                      child: const Text('Yes'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the dialog
+                      },
+                      child: const Text('No'),
+                    ),
+                  ],
+                );
+              },
             );
           },
-        );
-      }, child: Icon(Icons.logout)),
+          child: Icon(Icons.logout)),
       appBar: AppBar(
         title: const Text("Profile Page"),
       ),
@@ -84,19 +88,49 @@ class _ProfilePageState extends State<ProfilePage> {
             }
             final List<UserModel> dataa = snapshot.data;
 
-            final data = dataa[0];
+            return ListView.builder(
+              itemCount: dataa.length,
+              itemBuilder: (BuildContext context, int index) {
+                final data = dataa[index];
 
-            return Column(
-              children: [
-                Text(data.username),
-                Text(data.email),
-                Text(data.password),
-                Text(data.phone),
-                Text(data.address.city),
-                Text(data.id.toString()),
-                Text(data.name.firstname),
-                // Text(data.username),
-              ],
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    tileColor: AppColors.itemBg,
+                    title: Row(
+                      children: [
+                        Text(
+                          data.name.firstname,
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          data.name.lastname,
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      ],
+                    ),
+                    subtitle: Text(
+                      data.phone,
+                      style: TextStyle(color: Colors.white, fontSize: 17),
+                    ),
+                    trailing: Column(
+                      children: [
+                        Text(
+                          "Username: ${data.username}",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                        Text(
+                          "Password: ${data.password}",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             );
           },
         ),
