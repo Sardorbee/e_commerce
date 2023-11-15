@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:e_commerce/services/apis/all_products.dart';
-import 'package:e_commerce/ui/login_page/login_page.dart';
 import 'package:e_commerce/ui/tab_page/tab_page.dart';
 import 'package:e_commerce/utils/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -24,15 +23,13 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void navigateToNextScreen() {
-    // Delay for 4 seconds and navigate to the desired page
+
     Timer(const Duration(seconds: 4), () {
       final isloggedin = box.read('isloggedIn');
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-            builder: (context) => isloggedin == true
-                ? Tabscreen(apiProvider: widget.aPiProvider)
-                : LoginPage()), // Replace "YourPage" with the page you want to navigate to
+            builder: (context) => Tabscreen(apiProvider: widget.aPiProvider)),
       );
     });
   }

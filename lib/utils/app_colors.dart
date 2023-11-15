@@ -6,10 +6,4 @@ class AppColors{
    static const Color saleHot = Color(0xFFFF3E3E);
    static const Color mainBg = Color(0xFF1E1F28);
    static const Color itemBg = Color(0xFF2A2C36);
-  //  static const Color white = Color(0xFF);
-  //  static const Color white = Color(0xFF);
-  //  static const Color white = Color(0xFF);
-  //  static const Color white = Color(0xFF);
-  //  static const Color white = Color(0xFF);
-  //  static const Color white = Color(0xFF);
 }

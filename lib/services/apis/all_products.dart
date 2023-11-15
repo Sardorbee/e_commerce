@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:e_commerce/services/models/cart_model/cart_model.dart';
 import 'package:e_commerce/services/universal_response.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -13,12 +14,10 @@ class APiProvider {
     const apiUrl = 'https://fakestoreapi.com/auth/login';
 
     try {
-      
       final response = await http.post(
         Uri.parse(apiUrl),
         body: {"username": username, "password": password},
       );
-      
 
       if (response.statusCode == 200) {
         print(response.body);
@@ -150,29 +149,68 @@ class APiProvider {
     }
   }
 
-  Future<UniversalResponse> getUsers() async {
-    const apiUrl =
-        'https://fakestoreapi.com/users'; // Replace with your API endpoint
+  Future<UniversalResponse> getCarts() async {
+    const apiUrl = 'https://fakestoreapi.com/carts';
 
     final response = await http.get(Uri.parse(apiUrl));
 
     try {
       if (response.statusCode == 200) {
-        // User data retrieved successfully
         final jsonData = json.decode(response.body);
         if (jsonData is List) {
-          final userList =
-              jsonData.map((userJson) => UserModel.fromJson(userJson)).toList();
-          return UniversalResponse(data: userList);
+          final cartList =
+              jsonData.map((cart) => CartModel.fromJson(cart)).toList();
+          return UniversalResponse(data: cartList);
         } else {
           throw Exception('Invalid JSON format');
         }
       } else {
-        // Handle the API error
         return UniversalResponse(error: "Errorrr");
       }
     } catch (e) {
       return UniversalResponse(error: e.toString());
+    }
+  }
+
+  Future<UniversalResponse> getUserByID(int id) async {
+    Uri uri = Uri.parse("https://fakestoreapi.com/users/${id.toString()}");
+    try {
+      http.Response response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        return UniversalResponse(
+          data: UserModel.fromJson(jsonDecode(response.body)),
+        );
+      }
+
+      return UniversalResponse(error: "ERROR");
+    } catch (error) {
+      return UniversalResponse(error: error.toString());
+    }
+  }
+
+  Future<ProductsModel> getCartProductsByID(int id) async {
+    Uri uri = Uri.parse("https://fakestoreapi.com/products/${id.toString()}");
+    try {
+      http.Response response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        return ProductsModel.fromJson(jsonDecode(response.body));
+      }
+
+      return ProductsModel(
+          title: "Error",
+          price: 404,
+          description: 'Error',
+          category: 'Error',
+          image: 'Error');
+    } catch (error) {
+      return ProductsModel(
+          title: "Error",
+          price: 404,
+          description: 'Error',
+          category: 'Error',
+          image: 'Error');
     }
   }
 }
