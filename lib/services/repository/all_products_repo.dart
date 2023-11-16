@@ -24,9 +24,9 @@ class AllProductsRepository {
   }
 
   Future<List<ProductsModel>> fetchAllProducts(
-      [String? category, String? sort, int? limit]) async {
+      [String? category]) async {
     UniversalResponse universalResponse =
-        await aPiProvider!.getAllProducts(category!, sort, limit!);
+        await aPiProvider!.getAllProducts(category!);
     if (universalResponse.error.isEmpty) {
       return universalResponse.data as List<ProductsModel>;
     }

@@ -1,6 +1,7 @@
 import 'package:e_commerce/services/apis/all_products.dart';
-import 'package:e_commerce/ui/cart_page/cart_page.dart';
+import 'package:e_commerce/ui/admin_page/admin_page.dart';
 import 'package:e_commerce/ui/home_page/home_page.dart';
+import 'package:e_commerce/ui/my_cart/my_cart.dart';
 import 'package:e_commerce/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -21,9 +22,9 @@ class _TabscreenState extends State<Tabscreen> {
   void initState() {
     _pages.add(HomePage(
       apiProvider: widget.apiProvider,
-    ));
+    ));_pages.add(const MyCart());
 
-    _pages.add(CartPage(
+    _pages.add(AdminPage(
       apiProvider: widget.apiProvider,
     ));
     super.initState();
@@ -56,7 +57,10 @@ class _TabscreenState extends State<Tabscreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add_shopping_cart),
-            label: 'Profile',
+            label: 'Cart',
+          ),BottomNavigationBarItem(
+            icon: Icon(Icons.admin_panel_settings),
+            label: 'Admin',
           ),
         ],
       ),

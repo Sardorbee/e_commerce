@@ -8,15 +8,15 @@ import 'package:e_commerce/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 
-class CartPage extends StatefulWidget {
-  const CartPage({super.key, required this.apiProvider});
+class AdminPage extends StatefulWidget {
+  const AdminPage({super.key, required this.apiProvider});
   final APiProvider apiProvider;
 
   @override
-  State<CartPage> createState() => _CartPageState();
+  State<AdminPage> createState() => _AdminPageState();
 }
 
-class _CartPageState extends State<CartPage> {
+class _AdminPageState extends State<AdminPage> {
   final box = GetStorage();
   late CartRepo userRepo;
 
@@ -31,12 +31,10 @@ class _CartPageState extends State<CartPage> {
     return Scaffold(
       backgroundColor: AppColors.mainBg,
       appBar: AppBar(
-        title: const Text("Profile Page"),
+        title: const Text("Admin Page"),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(
-          8,
-        ),
+        padding: const EdgeInsets.all(8),
         child: FutureBuilder(
           future: userRepo.getUsers(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -81,7 +79,6 @@ class _CartPageState extends State<CartPage> {
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
                             padding: const EdgeInsets.all(8.0),
-
                             decoration:
                                 const BoxDecoration(color: AppColors.itemBg),
                             width: double.infinity,
@@ -94,50 +91,57 @@ class _CartPageState extends State<CartPage> {
                                       fontSize: 20, color: Colors.grey),
                                 ),
                                 const Divider(color: Colors.grey),
-                            FutureBuilder(
-                              future: Future.wait(
-                                data.products.map((productEntry) =>
-                                    widget.apiProvider.getCartProductsByID(productEntry.productId),
-                                ),
-                              ),
-                              builder: (context, AsyncSnapshot<List<ProductsModel>> snapshot) {
-                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                } else if (snapshot.hasError) {
-                                  return Center(
-                                    child: Text('Error: ${snapshot.error}'),
-                                  );
-                                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                                  return const Center(
-                                    child: Text('No data available'),
-                                  );
-                                }
+                                FutureBuilder(
+                                  future: Future.wait(
+                                    data.products.map(
+                                      (productEntry) => widget.apiProvider
+                                          .getCartProductsByID(
+                                              productEntry.productId),
+                                    ),
+                                  ),
+                                  builder: (context,
+                                      AsyncSnapshot<List<ProductsModel>>
+                                          snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.waiting) {
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    } else if (snapshot.hasError) {
+                                      return Center(
+                                        child: Text('Error: ${snapshot.error}'),
+                                      );
+                                    } else if (!snapshot.hasData ||
+                                        snapshot.data!.isEmpty) {
+                                      return const Center(
+                                        child: Text('No data available'),
+                                      );
+                                    }
 
-                                List<ProductsModel> productsList = snapshot.data!;
+                                    List<ProductsModel> productsList =
+                                        snapshot.data!;
 
-                                return ListView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemCount: data.products.length,
-                                  itemBuilder: (BuildContext context, int productIndex) {
-                                    ProductsModel product = productsList[productIndex];
+                                    return ListView.builder(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: data.products.length,
+                                      itemBuilder: (BuildContext context,
+                                          int productIndex) {
+                                        ProductsModel product =
+                                            productsList[productIndex];
 
-                                    return ListTile(
-                                      title: Text(product.title),
-                                      subtitle: Text(
-                                          'Quantity: ${data.products[index < data.products.length? index : 0].quantity}'),
-                                      // Other fields as needed
+                                        return ListTile(
+                                          title: Text(product.title),
+                                          subtitle: Text(
+                                              'Quantity: ${data.products[index < data.products.length ? index : 0].quantity}'),
+                                          // Other fields as needed
+                                        );
+                                      },
                                     );
                                   },
-                                );
-
-                              },
-                            ),
-
-
-                            ],
+                                ),
+                              ],
                             ),
                           ));
                     });

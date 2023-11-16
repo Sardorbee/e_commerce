@@ -1,3 +1,4 @@
+import 'package:e_commerce/db_bloc/db_bloc.dart';
 import 'package:e_commerce/ui/splash_page/splash.dart';
 // import 'package:flutter/material.dart';
 
@@ -38,10 +39,15 @@ import 'package:e_commerce/services/apis/all_products.dart';
 import 'package:e_commerce/ui/tab_page/tab_page.dart';
 import 'package:e_commerce/utils/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_storage/get_storage.dart';
 
 void main() async {
-  runApp(const MyApp());
+  runApp(MultiBlocProvider(providers: [
+    BlocProvider(
+      create: (context) => DbBloc(),
+    )
+  ], child: const MyApp()));
 
   await GetStorage.init();
 }

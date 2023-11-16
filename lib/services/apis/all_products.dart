@@ -37,9 +37,9 @@ class APiProvider {
   }
 
   Future<UniversalResponse> getAllProducts(
-      String categoy, String? sort, int limit) async {
+      String categoy) async {
     Uri uri = Uri.parse(
-        "https://fakestoreapi.com/products$categoy?sort=$sort&limit=$limit");
+        "https://fakestoreapi.com/products$categoy");
     try {
       http.Response response = await http.get(uri);
 

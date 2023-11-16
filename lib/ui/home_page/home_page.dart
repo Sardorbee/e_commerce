@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:e_commerce/db_bloc/db_bloc.dart';
 import 'package:e_commerce/services/apis/all_products.dart';
+import 'package:e_commerce/services/models/my_cart_model.dart';
 import 'package:e_commerce/services/models/product_model/products_model.dart';
 import 'package:e_commerce/ui/details_page/details_page.dart';
 import 'package:e_commerce/ui/home_page/add_page.dart';
@@ -7,6 +9,7 @@ import 'package:e_commerce/ui/home_page/shimm.dart';
 import 'package:e_commerce/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:e_commerce/services/repository/all_products_repo.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
@@ -40,19 +43,11 @@ class _HomePageState extends State<HomePage> {
     "/category/women's clothing",
   ];
 
-  List<String> sortOptions = ['asc', 'desc'];
-
-  List<int> limitOptions = [5, 10, 15, 20];
-  bool isMoreOptionsVisible = false;
-
   @override
   void initState() {
     rePo = AllProductsRepository(aPiProvider: widget.apiProvider);
     super.initState();
     category = categoryOptions[0];
-    sort = sortOptions[0];
-    limit = limitOptions[3];
-    // fetchCategoriesFromAPI();
   }
 
   @override
@@ -60,318 +55,173 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: AppColors.mainBg,
       appBar: AppBar(
-        backgroundColor: AppColors.mainBg,
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      AddPage(aPiProvider: widget.apiProvider),
-                ),
-              );
-            },
-            icon: const Icon(
-              Icons.add,
-            ),
-          ),
-          IconButton(
-            onPressed: () {
-              setState(() {
-                isMoreOptionsVisible = !isMoreOptionsVisible;
-              });
-              if (isMoreOptionsVisible == true) {
-                Future.delayed(const Duration(seconds: 5)).then((value) {
-                  setState(() {
-                    isMoreOptionsVisible = false;
-                  });
-                });
-              }
-            },
-            icon: const Icon(
-              Icons.more_vert,
-            ),
-          ),
-        ],
-      ),
+          title: const Text("Market"),
+          centerTitle: true,
+          backgroundColor: AppColors.mainBg),
       body: Padding(
-        padding: const EdgeInsets.all(
-          8,
-        ),
+        padding: const EdgeInsets.all(8),
         child: Column(
           children: [
-            AnimatedContainer(
-              height: isMoreOptionsVisible ? 60 : 0,
-              duration: const Duration(milliseconds: 200),
-              child: MoreOptions(),
-            ),
-            category == categoryOptions[1]
-                ? const Center(
-                    child: Text(
-                      "Electronics",
-                      style: TextStyle(color: Colors.white, fontSize: 24),
-                    ),
-                  )
-                : category == categoryOptions[2]
-                    ? const Center(
+            SizedBox(
+              height: 50,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: categoryOptions.length,
+                itemBuilder: (context, index) {
+                  String value = categoryOptions[index];
+                  String displayText = categoryDisplayTextMap[value] ?? 'All';
+                  bool isSelected = value == category;
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        category = value;
+                      });
+                    },
+                    child: Container(
+                      height: 40,
+                      width: 120,
+                      margin: const EdgeInsets.only(right: 10, bottom: 10),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: isSelected
+                              ? AppColors.primaryButton
+                              : Colors.red[300]),
+                      child: Center(
                         child: Text(
-                          "Jewelry",
-                          style: TextStyle(color: Colors.white, fontSize: 24),
+                          displayText,
+                          style: TextStyle(
+                            color: isSelected ? Colors.white : Colors.black,
+                          ),
                         ),
-                      )
-                    : category == categoryOptions[3]
-                        ? const Center(
-                            child: Text(
-                              "Men's Clothing",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 24),
-                            ),
-                          )
-                        : category == categoryOptions[4]
-                            ? const Center(
-                                child: Text(
-                                  "Women's Clothing",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 24),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Expanded(
+              child: FutureBuilder(
+                future: rePo.fetchAllProducts(category.toString()),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const ProductShimmer();
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  } else if (!snapshot.hasData) {
+                    return const Center(
+                      child: Text('No data available'),
+                    );
+                  }
+
+                  final data = snapshot.data;
+
+                  return GridView(
+                      shrinkWrap: true,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 12,
+                        mainAxisExtent: 300,
+                        // childAspectRatio: 0.6
+                      ),
+                      children: [
+                        ...List.generate(data.length, (index) {
+                          ProductsModel products = data[index];
+                          return Stack(
+                            children: [
+                              ZoomTapAnimation(
+                                onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          DetailsPage(id: products.id),
+                                    )),
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  //  margin: const EdgeInsets.only(left: 24,right: 24),
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    color: AppColors.itemBg,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          color: Colors.white,
+                                          width: 1150,
+                                          child: CachedNetworkImage(
+                                            imageUrl: products.image,
+                                            fit: BoxFit.scaleDown,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      RatingStars(
+                                        starCount: 5,
+                                        value: products.rating!.rate,
+                                        valueLabelVisibility: false,
+                                        starSize: 14,
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        products.title.substring(0, 10),
+                                        style: const TextStyle(
+                                            fontSize: 20, color: Colors.white),
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        "${products.price.toString()} \$",
+                                        style: const TextStyle(
+                                            fontSize: 20,
+                                            color: AppColors.saleHot),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              )
-                            : const SizedBox(),
-            futureBuilder(),
+                              ),
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: IconButton(
+                                  onPressed: () {
+                                    context.read<DbBloc>().add(InsertOrder(
+                                        cart: MyCartModel(
+                                            createdAt:
+                                                DateTime.now().toString(),
+                                            price: products.price.toString(),
+                                            quantity: "1",
+                                            orderName: products.title,
+                                            originalPrice:
+                                                products.price.toString())));
+                                  },
+                                  splashColor: Colors.transparent,
+                                  icon: Icon(
+                                    Icons.shopping_cart_outlined,
+                                    color: Colors.red[300],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
+                      ]);
+                },
+              ),
+            )
           ],
         ),
       ),
     );
   }
-
-  Row MoreOptions() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-          margin: const EdgeInsets.symmetric(vertical: 10),
-          height: 40,
-          width: 120,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: AppColors.primaryButton,
-          ),
-          child: Center(
-            child: PopupMenuButton<String>(
-              initialValue: sort,
-              onSelected: (String newValue) {
-                setState(() {
-                  sort = newValue;
-                });
-              },
-              itemBuilder: (BuildContext context) {
-                return sortOptions.map((String value) {
-                  return PopupMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                    ),
-                  );
-                }).toList();
-              },
-              // Remove or set the icon property to null to disable the icon
-              // icon: null,
-              child: const Center(
-                child: Text(
-                  "Sort",
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-            ),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-          height: 40,
-          width: 120,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: AppColors.primaryButton,
-          ),
-          child: Center(
-            child: PopupMenuButton<int>(
-              position: PopupMenuPosition.under,
-              initialValue: limit,
-              onSelected: (int? newValue) {
-                setState(() {
-                  limit = newValue;
-                });
-              },
-              itemBuilder: (BuildContext context) {
-                return limitOptions.map((int value) {
-                  return PopupMenuItem<int>(
-                    value: value,
-                    // ignore: unrelated_type_equality_checks
-                    child: Text(
-                      value == '' ? "All" : value.toString(),
-                    ),
-                  );
-                }).toList();
-              },
-              child: Text(
-                limit.toString(),
-                style: const TextStyle(fontSize: 18),
-              ),
-              // Remove or set the icon property to null to disable the icon
-              // icon: null,
-            ),
-          ),
-        ),
-        Container(
-          height: 40,
-          width: 120,
-          padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: AppColors.primaryButton,
-          ),
-          child: PopupMenuButton<String>(
-            initialValue: category,
-            onSelected: (String newValue) {
-              setState(() {
-                category = newValue;
-              });
-            },
-            itemBuilder: (BuildContext context) {
-              return categoryOptions.map((String value) {
-                String displayText = categoryDisplayTextMap[value] ?? 'All';
-                return PopupMenuItem<String>(
-                  value: value,
-                  child: Text(displayText),
-                );
-              }).toList();
-            },
-            child: const Center(
-              child: Text(
-                "Category",
-                style: TextStyle(fontSize: 18),
-              ),
-            ),
-            // Remove or set the icon property to null to disable the icon
-            // icon: null,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Expanded futureBuilder() {
-    return Expanded(
-      child: FutureBuilder(
-        future:
-            rePo.fetchAllProducts(category.toString(), sort.toString(), limit),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return ProductShimmer();
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else if (!snapshot.hasData) {
-            return const Center(
-              child: Text('No data available'),
-            );
-          }
-
-          final data = snapshot.data;
-
-          return GridView(
-              //     physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                mainAxisExtent: 300,
-                // childAspectRatio: 0.6
-              ),
-              children: [
-                ...List.generate(data.length, (index) {
-                  ProductsModel products = data[index];
-                  return Stack(
-                    children: [
-                      ZoomTapAnimation(
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  DetailsPage(id: products.id),
-                            )),
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          //  margin: const EdgeInsets.only(left: 24,right: 24),
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            color: AppColors.itemBg,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  color: Colors.white,
-                                  width: 1150,
-                                  child: CachedNetworkImage(
-                                    imageUrl: products.image,
-                                    fit: BoxFit.scaleDown,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              RatingStars(
-                                starCount: 5,
-                                value: products.rating!.rate,
-                                valueLabelVisibility: false,
-                                starSize: 14,
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                products.title.substring(0, 10),
-                                style: const TextStyle(
-                                    fontSize: 20, color: Colors.white),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                "${products.price.toString()} \$",
-                                style: const TextStyle(
-                                    fontSize: 20, color: AppColors.saleHot),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                }),
-              ]);
-        },
-      ),
-    );
-  }
 }
-
-
-// Future<List<String>> fetchCategoriesFromAPI() async {
-//     final response = await http.get(Uri.parse('https://fakestoreapi.com/products/categories')); // Replace 'API_URL' with your actual API endpoint
-
-//     if (response.statusCode == 200) {
-//       final data = jsonDecode(response.body);
-//       List<String> categories = List<String>.from(data);
-//       return categories;
-//     } else {
-//       throw Exception('Failed to fetch categories from API');
-//     }
-//   }
