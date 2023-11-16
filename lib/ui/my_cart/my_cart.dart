@@ -1,5 +1,6 @@
 import 'package:e_commerce/db_bloc/db_bloc.dart';
 import 'package:e_commerce/services/models/my_cart_model.dart';
+import 'package:e_commerce/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,7 +10,10 @@ class MyCart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.mainBg,
       appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: AppColors.mainBg,
         title: const Text("My Cart"),
         actions: [
           IconButton(
@@ -24,12 +28,27 @@ class MyCart extends StatelessWidget {
       ),
       body: BlocBuilder<DbBloc, DbState>(
         builder: (context, state) {
+          if (state.carts.isEmpty) {
+            return const Center(
+              child: Text(
+                "You don't have any orders yet",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            );
+          }
           return ListView(children: [
             ...List.generate(state.carts.length, (index) {
               MyCartModel cart = state.carts[index];
+
               return ListTile(
-                title: Text(cart.orderName),
-                subtitle: Text(cart.price),
+                title: Text(
+                  cart.orderName,
+                  style: const TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                subtitle: Text(
+                  "${cart.price} \$",
+                  style: const TextStyle(color: Colors.white, fontSize: 20),
+                ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -49,10 +68,16 @@ class MyCart extends StatelessWidget {
                               );
                         }
                       },
-                      child: const Icon(Icons.remove),
+                      child: const Icon(
+                        Icons.remove,
+                        color: Colors.white,
+                      ),
                     ),
                     const SizedBox(width: 5),
-                    Text(cart.quantity),
+                    Text(
+                      cart.quantity,
+                      style: const TextStyle(color: Colors.white, fontSize: 20),
+                    ),
                     const SizedBox(width: 5),
                     InkWell(
                       onTap: () {
@@ -68,7 +93,10 @@ class MyCart extends StatelessWidget {
                               ),
                             );
                       },
-                      child: const Icon(Icons.add),
+                      child: const Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
                     ),
                   ],
                 ),

@@ -57,7 +57,9 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
           title: const Text("Market"),
           centerTitle: true,
-          backgroundColor: AppColors.mainBg),
+        backgroundColor: AppColors.mainBg,
+
+         ),
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(

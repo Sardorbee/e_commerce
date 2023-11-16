@@ -31,6 +31,9 @@ class _AdminPageState extends State<AdminPage> {
     return Scaffold(
       backgroundColor: AppColors.mainBg,
       appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: AppColors.mainBg,
+
         title: const Text("Admin Page"),
       ),
       body: Padding(

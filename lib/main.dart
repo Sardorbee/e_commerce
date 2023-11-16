@@ -79,7 +79,7 @@ class _MyAppState extends State<MyApp> {
           return Navigator(
             onGenerateRoute: (settings) {
               return MaterialPageRoute(
-                builder: (context) => SplashPage(aPiProvider: aPiProvider),
+                builder: (context) => Tabscreen(apiProvider: aPiProvider),
               );
             },
           );
