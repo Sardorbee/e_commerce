@@ -91,6 +91,15 @@ class LocalDatabase {
     );
   }
 
+  static deleteOrderByName(String orderName) async {
+    final db = await getInstance.database;
+    db.delete(
+      MyCartModelFields.orderCartTable,
+      where: "${MyCartModelFields.orderName} = ?",
+      whereArgs: [orderName],
+    );
+  }
+
   static deleteAllOrders() async {
     final db = await getInstance.database;
     db.delete(

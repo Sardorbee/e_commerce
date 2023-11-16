@@ -13,6 +13,7 @@ class DbBloc extends Bloc<DbEvent, DbState> {
     on<DeleteOrders>(deleteOrders);
     on<DeleteAllOrders>(deleteAllOrders);
     on<UpdatePrice>(updatePrice);
+    on<DeleteOrdersByName>(deleteOrdersByName);
 
     add(GetAllOrders());
   }
@@ -38,6 +39,11 @@ class DbBloc extends Bloc<DbEvent, DbState> {
 
   deleteOrders(DeleteOrders event, Emitter<DbState> emit) async {
     await LocalDatabase.deleteOrderByID(event.id);
+    add(GetAllOrders());
+  }
+
+  deleteOrdersByName(DeleteOrdersByName event, Emitter<DbState> emit) async {
+    await LocalDatabase.deleteOrderByName(event.orderName);
     add(GetAllOrders());
   }
 

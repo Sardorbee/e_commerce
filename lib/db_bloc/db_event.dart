@@ -25,4 +25,9 @@ class DeleteOrders extends DbEvent {
   DeleteOrders({required this.id});
 }
 
+class DeleteOrdersByName extends DbEvent {
+  final String orderName;
+  DeleteOrdersByName({required this.orderName});
+}
+
 class DeleteAllOrders extends DbEvent {}

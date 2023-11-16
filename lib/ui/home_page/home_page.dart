@@ -6,6 +6,7 @@ import 'package:e_commerce/services/models/product_model/products_model.dart';
 import 'package:e_commerce/ui/details_page/details_page.dart';
 import 'package:e_commerce/ui/home_page/add_page.dart';
 import 'package:e_commerce/ui/home_page/shimm.dart';
+import 'package:e_commerce/ui/home_page/widgets/cart.dart';
 import 'package:e_commerce/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:e_commerce/services/repository/all_products_repo.dart';
@@ -55,11 +56,10 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: AppColors.mainBg,
       appBar: AppBar(
-          title: const Text("Market"),
-          centerTitle: true,
+        title: const Text("Market"),
+        centerTitle: true,
         backgroundColor: AppColors.mainBg,
-
-         ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8),
         child: Column(
@@ -132,16 +132,16 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         ...List.generate(data.length, (index) {
                           ProductsModel products = data[index];
-                          return Stack(
-                            children: [
-                              ZoomTapAnimation(
-                                onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          DetailsPage(id: products.id),
-                                    )),
-                                child: Container(
+                          return ZoomTapAnimation(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      DetailsPage(id: products.id),
+                                )),
+                            child: Stack(
+                              children: [
+                                Container(
                                   padding: const EdgeInsets.all(8),
                                   //  margin: const EdgeInsets.only(left: 24,right: 24),
                                   clipBehavior: Clip.antiAlias,
@@ -192,29 +192,9 @@ class _HomePageState extends State<HomePage> {
                                     ],
                                   ),
                                 ),
-                              ),
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: IconButton(
-                                  onPressed: () {
-                                    context.read<DbBloc>().add(InsertOrder(
-                                        cart: MyCartModel(
-                                            createdAt:
-                                                DateTime.now().toString(),
-                                            price: products.price.toString(),
-                                            quantity: "1",
-                                            orderName: products.title,
-                                            originalPrice:
-                                                products.price.toString())));
-                                  },
-                                  splashColor: Colors.transparent,
-                                  icon: Icon(
-                                    Icons.shopping_cart_outlined,
-                                    color: Colors.red[300],
-                                  ),
-                                ),
-                              ),
-                            ],
+                                CartPage(products: products),
+                              ],
+                            ),
                           );
                         }),
                       ]);
