@@ -23,10 +23,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void navigateToNextScreen() {
-
     Timer(const Duration(seconds: 4), () {
-      final isloggedin = box.read('isloggedIn');
-
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
             builder: (context) => Tabscreen(apiProvider: widget.aPiProvider)),
